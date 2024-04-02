@@ -51,5 +51,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "ThirdTry.sln"
+    "dotnet.defaultSolution": "ThirdTry.sln",
+    "FSharp.suggestGitignore": false
 }

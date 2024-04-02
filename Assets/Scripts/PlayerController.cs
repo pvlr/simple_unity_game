@@ -54,12 +54,13 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    void Jump() {
+    private void Jump() {
         // Добавляем игроку силу, направленную вверх
         self_rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         // Он больше не на земле, укажем на это чтобы не было бесконечных прыжков
         isGrounded = false;
     }
+
 
     private void OnCollisionEnter(Collision other) {
         // Отслеживаем столкновения персонажа. Когда оно происходит - считаем что он на земле (знаю что неправильно, позже изменю)
