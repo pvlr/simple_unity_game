@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private Transform self_tr, camera_tr;
 
     private bool isGrounded;
+    private bool isSelected = true;
 
 
     private void Awake() {
@@ -22,35 +23,41 @@ public class PlayerController : MonoBehaviour
 
     private void Update() {
         // Проверяем нажата ли кнопка "Пробел" и находится ли персонаж на земле
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded) {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && isSelected) {
             // Если да, вызывается функция прыжка
             Jump();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            isSelected = !isSelected;
         }
     }
 
 
     private void FixedUpdate() {
-        // Получаем данные о нажатых кнопках движения (WASD или стрелки)
-        float moveH = Input.GetAxis("Horizontal") * playerSpeed;
-        float moveV = Input.GetAxis("Vertical") * 0.8f * playerSpeed;
-        // Двигаем игрока
-        self_rb.velocity = transform.TransformDirection(moveH, self_rb.velocity.y, moveV);
+        if (isSelected) {
+            // Получаем данные о нажатых кнопках движения (WASD или стрелки)
+            float moveH = Input.GetAxis("Horizontal") * playerSpeed;
+            float moveV = Input.GetAxis("Vertical") * 0.8f * playerSpeed;
+            // Двигаем игрока
+            self_rb.velocity = transform.TransformDirection(moveH, self_rb.velocity.y, moveV);
 
-        // Получаем данные о движениях мыши по горизонтали
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensetivity;
-        // Камера является дочерним объктом игрока, поэтому вокруг оси Y я поворачиваю его, а камера следует за этим поворотом
-        self_tr.Rotate(new Vector3(0f, mouseX, 0f));
+            // Получаем данные о движениях мыши по горизонтали
+            float mouseX = Input.GetAxis("Mouse X") * mouseSensetivity;
+            // Камера является дочерним объктом игрока, поэтому вокруг оси Y я поворачиваю его, а камера следует за этим поворотом
+            self_tr.Rotate(new Vector3(0f, mouseX, 0f));
 
-        // Получаем данные о движениях мыши по вертикали
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensetivity;
-        // Получаем текущий угол наклона камеры по X и корректируем его с учетом ввода с мыши
-        float newAngleX = camera_tr.localEulerAngles.x - mouseY;
-        // После поворота камеры вверх выше середины, угол становится не отрицательным, а 360. Здесь это исправляется
-        if (newAngleX > 180f) {newAngleX -= 360f;}
-        // Для того чтобы ограничитьзначение угла, используем Mathf.Clamp()
-        newAngleX = Mathf.Clamp(newAngleX, -75, 75);
-        // Наконец, поворачиваем камеру
-        camera_tr.localEulerAngles = new Vector3(newAngleX, 0f, 0f);
+            // Получаем данные о движениях мыши по вертикали
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSensetivity;
+            // Получаем текущий угол наклона камеры по X и корректируем его с учетом ввода с мыши
+            float newAngleX = camera_tr.localEulerAngles.x - mouseY;
+            // После поворота камеры вверх выше середины, угол становится не отрицательным, а 360. Здесь это исправляется
+            if (newAngleX > 180f) {newAngleX -= 360f;}
+            // Для того чтобы ограничитьзначение угла, используем Mathf.Clamp()
+            newAngleX = Mathf.Clamp(newAngleX, -75, 75);
+            // Наконец, поворачиваем камеру
+            camera_tr.localEulerAngles = new Vector3(newAngleX, 0f, 0f);
+        }
     }
 
 
